@@ -1,0 +1,4 @@
+- hosts: clients,control
+  gather_facts: true
+  roles:
+    - fio-aggregate-fs-performance

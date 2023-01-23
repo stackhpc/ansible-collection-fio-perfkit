@@ -1,0 +1,7 @@
+- name: Install fio (RedHat)
+  include_tasks: install/RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: Install fio (Debian)
+  include_tasks: install/Debian.yml
+  when: ansible_os_family == 'Debian'

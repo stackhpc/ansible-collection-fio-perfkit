@@ -1,0 +1,6 @@
+- name: Install fio for Debian derivatives
+  apt:
+    name: "fio"
+    update_cache: yes
+  become: true
+  when: ansible_os_family == "Debian"

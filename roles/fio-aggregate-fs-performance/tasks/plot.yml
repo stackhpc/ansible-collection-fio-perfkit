@@ -1,0 +1,22 @@
+- name: Ensure virtualenv package is installed
+  package:
+    name: virtualenv
+  become: true
+
+- name: Create python venv from requirements
+  pip:
+    virtualenv: "{{ fio_perfkit_agg_io_venv_path }}"
+    name: "{{ fio_perfkit_agg_io_venv_requirements }}"
+
+- name: Copy plotting scripts
+  copy:
+    src: plot-agg-performance.py
+    dest: /tmp/plot-agg-performance.py
+
+- name: Run plotting code
+  shell: >-
+      {{ fio_perfkit_agg_io_venv_path }}/bin/python /tmp/plot-agg-performance.py
+      -o {{ fio_perfkit_agg_io_plot_output_directory }}
+      -p {{ fio_perfkit_agg_io_plot_output_prefix }}.{{ item  | basename }}
+      {{ fio_perfkit_agg_io_output_directory }}/{{ item | basename }}.clients*.json
+  loop: "{{ fio_config_files.files | map(attribute='path') }}"

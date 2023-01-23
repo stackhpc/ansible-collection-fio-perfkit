@@ -1,0 +1,14 @@
+namespace: stackhpc
+name: fio_perfkit
+version: 0.1.0
+description: Roles and playbooks for testing filesystems with fio.
+readme: README.md
+authors:
+  - "Matt Anson <matta@stackhpc.com>"
+license:
+  - "Apache-2.0"
+repository: "https://github.com/stackhpc/ansible-collection-fio-perfkit"
+
+dependencies:
+  ansible.posix: "1.3.0"
+  community.general: "6.1.0"

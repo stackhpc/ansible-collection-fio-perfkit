@@ -1,0 +1,6 @@
+---
+- name: Start fio server
+  become: true
+  command:
+    cmd: >-
+      fio --server --daemonize=/tmp/fio.pid
