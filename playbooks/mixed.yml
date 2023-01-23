@@ -2,4 +2,4 @@
   gather_facts: true
   tasks:
     - include_role:
-        name: stackhpc.fio_perfkit.mixed
+        name: stackhpc.fio_perfkit.mixed_io
