@@ -1,5 +1,7 @@
 - hosts: clients,control
   gather_facts: true
-  roles:
-    - stackhpc.fio_perfkit.mixed
-    - stackhpc.fio_perfkit.aggregate_performance
+  tasks:
+    - include_role:
+        name: stackhpc.fio_perfkit.mixed
+    - include_role:
+        name: stackhpc.fio_perfkit.aggregate_performance
