@@ -1,0 +1,46 @@
+---
+
+- name: Run fio server
+  include_role: 
+    name: fio
+    tasks_from: run-server.yml
+  when: inventory_hostname in groups['clients']
+
+- name: Get list of fio config files
+  ansible.builtin.find:
+    paths: "{{ fio_perfkit_mixed_io_jobfile_directory }}"
+    patterns: '*.fio'
+  register: fio_config_files
+  when: inventory_hostname in groups['control']
+
+- name: Run fio
+  command:
+    cmd: >- 
+      fio 
+      --output-format=json+ 
+      --output={{ fio_perfkit_mixed_io_output_directory }}/{{ item | basename }}.json 
+      --client={{ fio_perfkit_mixed_io_jobfile_directory ~ '/fio.hosts' }} 
+      {{ item }}
+  loop: "{{ fio_config_files.files | map(attribute='path') | sort }}"
+  when: inventory_hostname in groups['control']
+
+- name: Stop fio server
+  include_role: 
+    name: fio
+    tasks_from: stop-server.yml
+  when: inventory_hostname in groups['clients']
+
+- name: Get list of fio output files
+  ansible.builtin.find:
+    paths: "{{ fio_perfkit_mixed_io_output_directory }}"
+    patterns: '*.fio.json'
+  register: fio_output_files
+  when: inventory_hostname in groups['control']
+
+- name: Clean up non-json characters from fio json output
+  # Resort to sed here :(
+  command:
+    cmd: >-    
+      sed -i -n '/^{$/,$p' {{ item }}
+  loop: "{{ fio_output_files.files | map(attribute='path') }}"
+  when: inventory_hostname in groups['control']

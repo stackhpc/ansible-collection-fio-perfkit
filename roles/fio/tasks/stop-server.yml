@@ -1,0 +1,8 @@
+---
+
+- name: Kill fio from PIDfile
+  command:
+    cmd: pkill -F /tmp/fio.pid
+  become: true
+  failed_when: false
+  when: inventory_hostname in groups['clients']
