@@ -1,4 +1,4 @@
 - hosts: clients,control
   gather_facts: true
   roles:
-    - fio-mixed-io
+    - stackhpc.fio_perfkit.mixed
