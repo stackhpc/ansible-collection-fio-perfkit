@@ -1,5 +1,0 @@
-- hosts: clients,control
-  gather_facts: true
-  roles:
-    - fio-mixed-io
-    - fio-aggregate-fs-performance

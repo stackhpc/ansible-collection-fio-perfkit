@@ -1,0 +1,5 @@
+- hosts: clients,control
+  gather_facts: true
+  roles:
+    - stackhpc.fio_perfkit.fio-mixed-io
+    - stackhpc.fio_perfkit.fio-aggregate-fs-performance
