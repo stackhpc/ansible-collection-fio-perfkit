@@ -1,4 +1,5 @@
 - hosts: clients,control
   gather_facts: true
-  roles:
-    - stackhpc.fio_perfkit.mixed
+  tasks:
+    - include_role:
+        name: stackhpc.fio_perfkit.mixed
