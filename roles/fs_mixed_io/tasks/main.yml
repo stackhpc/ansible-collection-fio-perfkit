@@ -1,15 +1,15 @@
 ---
 
 - name: Install fio
-  include_role: 
+  ansible.builtin.include_role:
     name: fio
 
 - name: Write fio configuration files
-  include_tasks: configure.yml
+  ansible.builtin.include_tasks: configure.yml
 
 - name: Run fio jobs
-  include_tasks: run.yml
+  ansible.builtin.include_tasks: run.yml
 
 - name: Plot filesystem performance
-  include_tasks: plot.yml
+  ansible.builtin.include_tasks: plot.yml
   when: inventory_hostname in groups['control']

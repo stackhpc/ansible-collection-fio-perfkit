@@ -1,7 +1,7 @@
 ---
 
 - name: Kill fio from PIDfile
-  command:
+  ansible.builtin.command:
     cmd: pkill -F /tmp/fio.pid
   become: true
   failed_when: false

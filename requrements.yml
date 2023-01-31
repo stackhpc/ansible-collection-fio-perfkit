@@ -2,4 +2,4 @@
 collections:
   - name: https://github.com/stackhpc/ansible-collection-fio-perfkit.git
     type: git
-    # version: <commit sha to pin version> 
+    # version: <commit sha to pin version>

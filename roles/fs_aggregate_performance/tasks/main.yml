@@ -1,0 +1,17 @@
+---
+- name: Run prechecks
+  ansible.builtin.include_tasks: prechecks.yml
+
+- name: Install fio
+  ansible.builtin.include_role:
+    name: fio
+
+- name: Write fio configuration files
+  ansible.builtin.include_tasks: configure.yml
+
+- name: Run fio jobs
+  ansible.builtin.include_tasks: run.yml
+
+- name: Plot filesystem performance
+  ansible.builtin.include_tasks: plot.yml
+  when: inventory_hostname in groups['control']

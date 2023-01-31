@@ -1,6 +1,7 @@
 ---
 - name: Start fio server
   become: true
-  command:
+  ansible.builtin.command:
     cmd: >-
       fio --server --daemonize=/tmp/fio.pid
+  changed_when: true

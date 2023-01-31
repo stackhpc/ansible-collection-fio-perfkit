@@ -1,18 +1,18 @@
 ---
 
 - name: Remove output directory
-  file:
+  ansible.builtin.file:
     state: absent
     path: "{{ item }}"
   loop:
     - "{{ fio_perfkit_agg_io_jobfile_directory }}"
     - "{{ fio_perfkit_agg_io_output_directory }}"
-  when: 
-   - fio_perfkit_agg_io_pre_cleanup
-   - inventory_hostname in groups['control']
+  when:
+    - fio_perfkit_agg_io_pre_cleanup
+    - inventory_hostname in groups['control']
 
 - name: Ensure output directory exists
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ item }}"
     recurse: true
@@ -22,16 +22,17 @@
     - "{{ fio_perfkit_agg_io_output_directory }}"
 
 - name: Ensure fio test directory exists
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ fio_perfkit_agg_io.fio_directory }}"
     recurse: true
   become: true
 
 - name: Template fio config
-  template:
+  ansible.builtin.template:
     src: fio-aggregate-perf.fio.j2
     dest: "{{ fio_perfkit_agg_io_jobfile_directory }}/job.{{ idx }}.fio"
+    mode: 0755
   loop: "{{ _fio_perfkit_agg_io_fiojobs }}"
   loop_control:
     index_var: idx
@@ -47,12 +48,13 @@
     jobname: "{{ item.rw }}"
 
 - name: Write fio server hosts file
-  copy:
+  ansible.builtin.copy:
     content: |
-      {% for host in groups['clients'][:idx + 1] %}
+      {% for host in groups['clients'][: idx + 1] %}
       {{ host }}
       {% endfor -%}
     dest: "{{ fio_perfkit_agg_io_jobfile_directory ~ '/fio.' ~ idx ~ '.hosts' }}"
+    mode: 0755
   loop: "{{ groups['clients'] }}"
   loop_control:
     index_var: idx
