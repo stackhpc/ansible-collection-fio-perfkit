@@ -2,6 +2,10 @@
 
 - hosts: clients,control
   gather_facts: true
+  name: Test aggregate filesystem performance
+  collections:
+    - stackhpc.fio_perfkit
   tasks:
-    - include_role:
-        name: stackhpc.fio_perfkit.aggregate_performance
+    - name: Test aggregate filesystem performance
+      ansible.builtin.include_role:
+        name: fs_aggregate_performance

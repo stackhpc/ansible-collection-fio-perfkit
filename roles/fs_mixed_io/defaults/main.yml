@@ -1,19 +1,15 @@
 ---
-_fio_perfkit_mixed_io_read_mix_list: "{{ range(
-                                                fio_perfkit_mixed_io.fio_read_mix.start, 
-                                                fio_perfkit_mixed_io.fio_read_mix.end, 
-                                                fio_perfkit_mixed_io.fio_read_mix.step
-                                                ) | list + [
-                                                fio_perfkit_mixed_io.fio_read_mix.end
-                                                ] }}"
+_fio_perfkit_mixed_io_read_mix_list: "{{ range(fio_perfkit_mixed_io.fio_read_mix.start,
+                                                fio_perfkit_mixed_io.fio_read_mix.end,
+                                                fio_perfkit_mixed_io.fio_read_mix.step)
+                                                | list + [fio_perfkit_mixed_io.fio_read_mix.end]
+                                                }}"
 
-_fio_perfkit_mixed_io_random_mix_list: "{{ range(
-                                                  fio_perfkit_mixed_io.fio_random_mix.start,
+_fio_perfkit_mixed_io_random_mix_list: "{{ range(fio_perfkit_mixed_io.fio_random_mix.start,
                                                   fio_perfkit_mixed_io.fio_random_mix.end,
-                                                  fio_perfkit_mixed_io.fio_random_mix.step
-                                                  ) | list + [
-                                                  fio_perfkit_mixed_io.fio_random_mix.end
-                                                  ] }}"
+                                                  fio_perfkit_mixed_io.fio_random_mix.step)
+                                                  | list + [fio_perfkit_mixed_io.fio_random_mix.end]
+                                                  }}"
 
 _fio_perfkit_mixed_io_fiojobs: >-
   {%- set build_fiojobs = [] -%}

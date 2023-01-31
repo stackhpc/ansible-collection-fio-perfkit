@@ -1,0 +1,63 @@
+---
+
+- name: Ensure virtualenv package is installed
+  ansible.builtin.package:
+    name: virtualenv
+  become: true
+
+- name: Create python venv from requirements
+  ansible.builtin.pip:
+    virtualenv: "{{ fio_perfkit_single_device_perf_venv_path }}"
+    name: "{{ fio_perfkit_single_device_perf_venv_requirements }}"
+  when: inventory_hostname in groups['clients']
+
+- name: Copy plotting scripts
+  ansible.builtin.copy:
+    src: fio-single-disk-io.py
+    dest: "{{ fio_perfkit_single_device_perf_directory }}/fio-single-disk-io.py"
+    mode: 0755
+  when: inventory_hostname in groups['clients']
+
+- name: Run plotting code
+  ansible.builtin.command: >-
+      {{ fio_perfkit_single_device_perf_venv_path }}/bin/python
+      {{ fio_perfkit_single_device_perf_directory }}/fio-single-disk-io.py
+      -o {{ fio_perfkit_single_device_perf_plot_output_directory }}
+      -b {{ item.bs }}
+      -m {{ item.rw }}
+      -r {{ item.runtime }}
+      -f {{ item.filesize }}
+      {{ item.device }}
+      {{ item.max_numjobs }}
+  loop: "{{ _fio_perfkit_single_device_perf_fiojobs }}"
+  when: inventory_hostname in groups['clients']
+  become: true
+
+- name: List plot files on all hosts
+  ansible.builtin.find:
+    path: "{{ fio_perfkit_single_device_perf_plot_output_directory }}"
+    patterns: "*.png"
+  register: single_device_plotfiles
+
+- name: Retrieve plot files from client hosts
+  ansible.builtin.fetch:
+    src: "{{ item }}"
+    dest: "{{ fio_perfkit_single_device_perf_sync_directory }}/"
+    flat: true
+  loop: "{{ single_device_plotfiles.files | map(attribute='path') | sort }}"
+
+- name: List retrieved plot files
+  ansible.builtin.find:
+    path: "{{ fio_perfkit_single_device_perf_plot_output_directory }}"
+    patterns: "*.png"
+  delegate_to: localhost
+  run_once: true
+  register: single_device_plotfiles_synced
+
+- name: Copy plot files on control host
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ fio_perfkit_single_device_perf_plot_output_directory }}"
+    mode: 0755
+  loop: "{{ single_device_plotfiles_synced.files | map(attribute='path') }}"
+  when: inventory_hostname in groups['control']

@@ -40,7 +40,7 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
   gather_facts: true
   tasks:
     - import_role: 
-        name: mixed_io
+        name: fs_mixed_io
       vars:
         fio_perfkit_mixed_io:
           # Test the product of fio_bs_list, fio_read_mix and fio_random_mix
@@ -64,7 +64,7 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
             step: 50
 
     - import_role:
-        name: aggregate_performance
+        name: fs_aggregate_performance
       vars:
         fio_perfkit_agg_io:
           # Test the product of fio_bs_list and fio_rw_list

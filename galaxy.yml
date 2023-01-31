@@ -1,7 +1,7 @@
 namespace: stackhpc
 name: fio_perfkit
 version: 0.1.0
-description: Roles and playbooks for testing filesystems with fio.
+description: Roles and playbooks for testing hardware and filesystems with fio.
 readme: README.md
 authors:
   - "Matt Anson <matta@stackhpc.com>"

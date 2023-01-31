@@ -1,7 +1,11 @@
 - hosts: clients,control
   gather_facts: true
-  tasks:
-    - include_role:
-        name: stackhpc.fio_perfkit.mixed_io
-    - include_role:
-        name: stackhpc.fio_perfkit.aggregate_performance
+  collections:
+    - stackhpc.fio_perfkit
+  name: Run all playbooks
+
+- name: Run mixed IO playbook
+  ansible.builtin.import_playbook: mixed.yml
+
+- name: Run aggregate performance playbook
+  ansible.builtin.import_playbook: aggregate.yml

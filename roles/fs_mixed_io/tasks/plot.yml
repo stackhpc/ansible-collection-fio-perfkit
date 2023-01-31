@@ -1,21 +1,23 @@
 - name: Ensure virtualenv package is installed
-  package:
+  ansible.builtin.package:
     name: virtualenv
   become: true
 
 - name: Create python venv from requirements
-  pip:
+  ansible.builtin.pip:
     virtualenv: "{{ fio_perfkit_mixed_io_venv_path }}"
     name: "{{ fio_perfkit_mixed_io_venv_requirements }}"
 
 - name: Copy plotting scripts
-  copy:
+  ansible.builtin.copy:
     src: plot-mixed-io.py
     dest: /tmp/plot-mixed-io.py
+    mode: 0755
 
 - name: Run plotting code
-  shell: >-
+  ansible.builtin.shell: >-
       {{ fio_perfkit_mixed_io_venv_path }}/bin/python /tmp/plot-mixed-io.py
       -o {{ fio_perfkit_mixed_io_plot_output_directory }}
       -p {{ fio_perfkit_mixed_io_plot_output_prefix }}
       {{ fio_perfkit_mixed_io_output_directory }}/*.json
+  changed_when: true
