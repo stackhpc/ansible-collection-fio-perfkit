@@ -1,0 +1,10 @@
+---
+
+- name: Ensure output directory exists
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+    recurse: true
+  loop:
+    - "{{ fio_perfkit_single_host_perf_directory }}"
+    - "{{ fio_perfkit_single_host_perf_output_directory }}"

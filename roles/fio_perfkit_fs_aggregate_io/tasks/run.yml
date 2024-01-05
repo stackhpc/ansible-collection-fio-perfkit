@@ -1,0 +1,51 @@
+---
+
+- name: Run fio server
+  ansible.builtin.include_role:
+    name: fio
+    tasks_from: run-server.yml
+  when: inventory_hostname in groups['fs_clients']
+
+- name: Get list of fio config files
+  ansible.builtin.find:
+    paths: "{{ fio_perfkit_fs_aggregate_io_jobfile_directory }}"
+    patterns: '*.fio'
+  register: fio_config_files
+  when: inventory_hostname in groups['control']
+
+- name: Run fio
+  ansible.builtin.command:
+    cmd: >-
+      fio
+      --output={{ fio_perfkit_fs_aggregate_io_output_directory }}/{{ item.config | basename }}.clients{{ item.hosts }}.json
+      --client={{ fio_perfkit_fs_aggregate_io_jobfile_directory ~ '/fio.' ~ item.hosts ~ '.hosts' }}
+      {{ item.config }}
+      --output-format=json+
+  when: inventory_hostname in groups['control']
+  changed_when: true
+  loop: >-
+    {%- set fio_cmds = [] -%}
+    {%- for hosts in range( groups['fs_clients'] | length ) -%}
+    {%- for config in (fio_config_files.files | map(attribute='path')) -%}
+    {%- set _ = fio_cmds.append(
+      {
+        "hosts": hosts,
+        "config": config
+      }
+    ) -%}
+    {%- endfor -%}
+    {%- endfor -%}
+    {{ fio_cmds }}
+
+- name: Stop fio server
+  ansible.builtin.include_role:
+    name: fio
+    tasks_from: stop-server.yml
+  when: inventory_hostname in groups['fs_clients']
+
+- name: Get list of fio output files
+  ansible.builtin.find:
+    paths: "{{ fio_perfkit_fs_aggregate_io_output_directory }}"
+    patterns: '*.json'
+  register: fio_output_files
+  when: inventory_hostname in groups['control']

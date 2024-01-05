@@ -1,3 +1,5 @@
+---
+
 - name: Install fio for Debian derivatives
   ansible.builtin.apt:
     name: "fio"

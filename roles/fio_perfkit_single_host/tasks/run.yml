@@ -1,0 +1,16 @@
+---
+
+- name: Run plotting code
+  ansible.builtin.command: >-
+      {{ ceph_perftest_path }}
+      single-host
+      -o {{ fio_perfkit_single_host_perf_output_directory }}
+      -b {{ item.bs }}
+      -m {{ item.rw }}
+      -r {{ item.runtime }}
+      -f {{ item.filesize }}
+      {{ item.devices | join(" ") }}
+  loop: "{{ fio_perfkit_single_host_config }}"
+  changed_when: true
+  when: inventory_hostname in groups['fs_clients']
+  become: true

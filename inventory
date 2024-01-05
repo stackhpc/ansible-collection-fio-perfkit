@@ -1,0 +1,10 @@
+[control]
+fs-client01 ansible_host=10.0.2.74 ansible_user=rocky
+
+[fs_clients]
+fs-client01 ansible_host=10.0.2.74 ansible_user=rocky
+fs-client02 ansible_host=10.0.0.229 ansible_user=rocky
+fs-client03 ansible_host=10.0.1.145 ansible_user=rocky
+
+[all:vars]
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q vglab-bastion"'

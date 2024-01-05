@@ -1,9 +1,0 @@
-- hosts: control,clients
-  gather_facts: true
-  name: Run single device performance tests
-  collections:
-    - stackhpc.fio_perfkit
-  tasks:
-    - name: Run single device performance role
-      ansible.builtin.include_role:
-        name: single_device_performance

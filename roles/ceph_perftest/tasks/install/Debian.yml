@@ -1,0 +1,9 @@
+---
+
+- name: Install Python 3.10 for Debian derivatives
+  ansible.builtin.apt:
+    name:
+      - python{{ ceph_perftest_python_version }}
+      - python{{ ceph_perftest_python_version }}-venv
+    update_cache: true
+  become: true

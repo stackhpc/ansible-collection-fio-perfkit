@@ -1,0 +1,11 @@
+---
+
+- name: Run plotting code
+  ansible.builtin.shell: >-
+      {{ ceph_perftest_path }}
+      aggregate-performance
+      -o {{ fio_perfkit_fs_aggregate_io_output_directory }}
+      -p fio-perfkit-aggregate-perf.{{ item | basename }}
+      {{ fio_perfkit_fs_aggregate_io_output_directory }}/{{ item | basename }}.*.json
+  loop: "{{ fio_config_files.files | map(attribute='path') }}"
+  changed_when: true

@@ -1,0 +1,14 @@
+---
+
+ceph_perftest_python_version: "{{ '3.9' if ansible_os_family == 'RedHat' else '3.10' }}"
+
+ceph_perftest_venv_path: "/tmp/ceph-perftest-venv"
+
+ceph_perftest_system_packages_default:
+  - git
+
+ceph_perftest_system_packages_additional: []
+
+ceph_perftest_system_packages: "{{ ceph_perftest_system_packages_default + ceph_perftest_system_packages_additional }}"
+
+ceph_perftest_local_output_directory: "{{ playbook_dir }}"

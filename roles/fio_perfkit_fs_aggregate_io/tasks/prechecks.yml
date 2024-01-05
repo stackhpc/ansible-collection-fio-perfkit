@@ -1,0 +1,8 @@
+---
+- name: Fail when unsupported rw mode is supplied
+  ansible.builtin.fail:
+    msg: "rw must be one of {{ fio_perfkit_fs_aggregate_io_supported_rw_types | join(',') }}"
+  when: item not in fio_perfkit_fs_aggregate_io_supported_rw_types
+  loop: "{{ fio_perfkit_fs_aggregate_io_config.fio_rw_list }}"
+  run_once: true
+  delegate_to: localhost

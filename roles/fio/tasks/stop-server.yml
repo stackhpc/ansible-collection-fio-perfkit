@@ -5,4 +5,5 @@
     cmd: pkill -F /tmp/fio.pid
   become: true
   failed_when: false
-  when: inventory_hostname in groups['clients']
+  changed_when: true
+  when: inventory_hostname in groups['fs_clients']
