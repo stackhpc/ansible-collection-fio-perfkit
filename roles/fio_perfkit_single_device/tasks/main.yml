@@ -1,0 +1,19 @@
+---
+
+- name: Install ceph-perftest
+  ansible.builtin.include_role:
+    name: ceph_perftest
+
+- name: Configure benchmark
+  ansible.builtin.include_tasks: configure.yml
+
+- name: Run fio jobs and plot result
+  ansible.builtin.include_tasks: run.yml
+
+- name: Retrieve output files
+  ansible.builtin.include_role:
+    name: ceph_perftest
+    tasks_from: fetch_output.yml
+  vars:
+    ceph_perftest_local_output_directory_prefix: "fio-perfkit.single-device"
+    ceph_perftest_output_directory: "{{ fio_perfkit_single_device_perf_output_directory }}"

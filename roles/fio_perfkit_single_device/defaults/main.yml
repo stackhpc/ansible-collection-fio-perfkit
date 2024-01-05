@@ -1,0 +1,6 @@
+---
+fio_perfkit_single_device_config: "{{ undef('Set a list of fiojobs') }}"
+
+fio_perfkit_single_device_perf_directory: "/tmp/fio-perfkit-single-device-performance/{{ ansible_date_time.iso8601_basic_short }}"
+
+fio_perfkit_single_device_perf_output_directory: "{{ fio_perfkit_single_device_perf_directory }}/output"

@@ -1,5 +1,5 @@
 - name: Install fio for RedHat derivatives
-  ansible.builtin.apt:
+  ansible.builtin.dnf:
     name: "fio"
   become: true
   when: ansible_os_family == "RedHat"

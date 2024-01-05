@@ -1,9 +1,0 @@
-- hosts: clients,control
-  gather_facts: true
-  name: Run mixed IO role
-  collections:
-    - stackhpc.fio_perfkit
-  tasks:
-    - name: Run mixed IO role
-      ansible.builtin.include_role:
-        name: fs_mixed_io

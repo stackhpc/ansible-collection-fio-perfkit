@@ -1,0 +1,36 @@
+---
+
+fio_perfkit_fs_aggregate_io_config: "{{ undef('Set an Aggregate IO config') }}"
+
+fio_perfkit_fs_aggregate_io_supported_rw_types:
+  - read
+  - write
+  - randread
+  - randwrite
+
+fio_perfkit_fs_aggregate_io_fiojobs: >-
+  {%- set build_fiojobs = [] -%}
+  {%- for bs in fio_perfkit_fs_aggregate_io_config.fio_bs_list -%}
+  {%- for rw in fio_perfkit_fs_aggregate_io_config.fio_rw_list -%}
+  {%- set _ = build_fiojobs.append(
+    {
+    "bs": bs,
+    "directory": fio_perfkit_fs_aggregate_io_config.fio_directory,
+    "runtime": fio_perfkit_fs_aggregate_io_config.fio_runtime,
+    "numjobs": fio_perfkit_fs_aggregate_io_config.fio_numjobs,
+    "size": fio_perfkit_fs_aggregate_io_config.fio_size,
+    "nrfiles": fio_perfkit_fs_aggregate_io_config.fio_nrfiles,
+    "rw": rw,
+    }
+  ) -%}
+  {%- endfor -%}
+  {%- endfor -%}
+  {{ build_fiojobs }}
+
+fio_perfkit_fs_aggregate_io_pre_cleanup: true
+
+fio_perfkit_fs_aggregate_io_directory: "/tmp/fio-perfkit-agg-io/{{ ansible_date_time.iso8601_basic_short }}"
+
+fio_perfkit_fs_aggregate_io_output_directory: "{{ fio_perfkit_fs_aggregate_io_directory }}/output"
+
+fio_perfkit_fs_aggregate_io_jobfile_directory: "{{ fio_perfkit_fs_aggregate_io_directory }}/jobfiles"

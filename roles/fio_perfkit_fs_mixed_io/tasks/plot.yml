@@ -1,0 +1,10 @@
+---
+
+- name: Run plotting code
+  ansible.builtin.shell: >-
+      {{ ceph_perftest_path }}
+      mixed-io
+      -o {{ fio_perfkit_fs_mixed_io_output_directory }}
+      -p fio-perfkit-mixed_io
+      {{ fio_perfkit_fs_mixed_io_output_directory }}/*.json
+  changed_when: true

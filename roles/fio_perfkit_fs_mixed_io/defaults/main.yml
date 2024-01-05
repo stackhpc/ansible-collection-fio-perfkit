@@ -1,0 +1,44 @@
+---
+fio_perfkit_fs_mixed_io_config: "{{ undef('Set a config for Mixed IO tests') }}"
+
+fio_perfkit_fs_mixed_io_read_mix_list: "{{ range(fio_perfkit_fs_mixed_io_config.fio_read_mix.start,
+                                                fio_perfkit_fs_mixed_io_config.fio_read_mix.end,
+                                                fio_perfkit_fs_mixed_io_config.fio_read_mix.step)
+                                                | list + [fio_perfkit_fs_mixed_io_config.fio_read_mix.end]
+                                                }}"
+
+fio_perfkit_fs_mixed_io_random_mix_list: "{{ range(fio_perfkit_fs_mixed_io_config.fio_random_mix.start,
+                                                  fio_perfkit_fs_mixed_io_config.fio_random_mix.end,
+                                                  fio_perfkit_fs_mixed_io_config.fio_random_mix.step)
+                                                  | list + [fio_perfkit_fs_mixed_io_config.fio_random_mix.end]
+                                                  }}"
+
+fio_perfkit_fs_mixed_io_fiojobs: >-
+  {%- set build_fiojobs = [] -%}
+  {%- for bs in fio_perfkit_fs_mixed_io_config.fio_bs_list -%}
+  {%- for random_mix in fio_perfkit_fs_mixed_io_random_mix_list -%}
+  {%- for read_mix in fio_perfkit_fs_mixed_io_read_mix_list -%}
+  {%- set _ = build_fiojobs.append(
+    {
+    "bs": bs,
+    "directory": fio_perfkit_fs_mixed_io_config.fio_directory,
+    "runtime": fio_perfkit_fs_mixed_io_config.fio_runtime,
+    "numjobs": fio_perfkit_fs_mixed_io_config.fio_numjobs,
+    "size": fio_perfkit_fs_mixed_io_config.fio_size,
+    "nrfiles": fio_perfkit_fs_mixed_io_config.fio_nrfiles,
+    "rwmixread": read_mix,
+    "percentage_random": random_mix
+    }
+  ) -%}
+  {%- endfor -%}
+  {%- endfor -%}
+  {%- endfor -%}
+  {{ build_fiojobs }}
+
+fio_perfkit_fs_mixed_io_pre_cleanup: true
+
+fio_perfkit_fs_mixed_io_directory: "/tmp/fio-perfkit-mixed-io/{{ ansible_date_time.iso8601_basic_short }}"
+
+fio_perfkit_fs_mixed_io_output_directory: "{{ fio_perfkit_fs_mixed_io_directory }}/output"
+
+fio_perfkit_fs_mixed_io_jobfile_directory: "{{ fio_perfkit_fs_mixed_io_directory }}/jobfiles"

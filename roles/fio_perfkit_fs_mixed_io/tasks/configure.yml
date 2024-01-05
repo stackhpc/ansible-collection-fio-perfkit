@@ -1,0 +1,48 @@
+---
+
+- name: Ensure output directory exists
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+    recurse: true
+  when: inventory_hostname in groups['control']
+  loop:
+    - "{{ fio_perfkit_fs_mixed_io_jobfile_directory }}"
+    - "{{ fio_perfkit_fs_mixed_io_output_directory }}"
+
+- name: Ensure fio test directory exists
+  ansible.builtin.file:
+    state: directory
+    path: "{{ fio_perfkit_fs_mixed_io_config.fio_directory }}"
+    recurse: true
+  become: true
+
+- name: Template fio config
+  ansible.builtin.template:
+    src: fio-mixed-io.job.j2
+    dest: "{{ fio_perfkit_fs_mixed_io_jobfile_directory }}/job.{{ '%02d' | format(idx) }}.fio"
+    mode: "0755"
+  loop: "{{ fio_perfkit_fs_mixed_io_fiojobs }}"
+  when: inventory_hostname in groups['control']
+  loop_control:
+    index_var: idx
+  vars:
+    bs: "{{ item.bs }}"
+    directory: "{{ item.directory }}"
+    runtime: "{{ item.runtime }}"
+    numjobs: "{{ item.numjobs }}"
+    size: "{{ item.size }}"
+    nrfiles: "{{ item.nrfiles }}"
+    rwmixread: "{{ item.rwmixread }}"
+    percentage_random: "{{ item.percentage_random }}"
+
+- name: Write fio server hosts file
+  ansible.builtin.copy:
+    content: |
+      {% for host in groups['fs_clients'] %}
+      {% set ipaddr = hostvars[host]['ansible_default_ipv4']['address'] %}
+      {{ ipaddr }}
+      {% endfor -%}
+    dest: "{{ fio_perfkit_fs_mixed_io_jobfile_directory ~ '/fio.hosts' }}"
+    mode: "0755"
+  when: inventory_hostname in groups['control']

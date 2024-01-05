@@ -1,0 +1,23 @@
+---
+- name: Ensure Python
+  ansible.builtin.include_tasks: install/{{ ansible_os_family }}.yml
+
+- name: Ensure system package dependencies
+  ansible.builtin.package:
+    name: "{{ ceph_perftest_system_packages }}"
+  become: true
+
+- name: Ensure ceph-perftest virtual environment
+  ansible.builtin.pip:
+    name: "git+https://github.com/m-bull/ceph-perftest"
+    virtualenv: "{{ ceph_perftest_venv_path }}"
+    virtualenv_command: python{{ ceph_perftest_python_version }} -m venv
+  register: ceph_perftest
+
+- name: Set ceph-perftest path fact
+  ansible.builtin.set_fact:
+    ceph_perftest_path: "{{ ceph_perftest.virtualenv }}/bin/ceph-perftest"
+
+- name: Install fio
+  ansible.builtin.include_role:
+    name: fio

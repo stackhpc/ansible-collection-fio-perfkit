@@ -1,38 +1,3 @@
-# ansible-collection-fio-perfkit
-
-An ansible collection for benchmarking network filesystem aggregate performance using `fio`, the [flexible IO](https://fio.readthedocs.io/en/latest/) tester.
-
-### Installation
-
-```
-python3 -m venv venv
-source venv/bin/activate
-pip install ansible>=9.0
-ansible-galaxy collection install git+https://github.com/stackhpc/ansible-collection-fio-perfkit.git
-```
-
-### Usage
-
-#### Ansible inventory
-
-Create a simple Ansible inventory, specifying a single `control` host, and as many network filesystem `fs_client` hosts as required. 
-
-The control `host` may be `localhost`, but the control host must be able to connect to port 8765 on all `fs_client` hosts. 
-
-Equally, the control host may be one of the filesystem clients, but output plots will be generated on the control host and must be retrieved.  
-
-```
-[control]
-localhost ansible_connection=local # Must be able to connect to port 8765 on all clients
-
-[fs_clients]
-fs-client[01-30]
-```
-
-#### Ansible playbook
-An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
-```yaml
----
 - name: Run device tests
   hosts: fs_clients
   gather_facts: true
@@ -44,7 +9,7 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
         fio_perfkit_single_host_config:
           - devices:
               - /dev/vdb
-              - /dev/vdc
+              # - /dev/vdc
             max_numjobs: 4
             bs: 1M
             rw: write
@@ -107,23 +72,3 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
           fio_rw_list: # List of rw modes to test
             - read
             - write
-
-
-```
-
-### Benchmarks
-All benchmarks are time-based - they run for as long as specified in `fio_runtime`. Additionally, the number of files to test IO over (`fio_nrfiles`), the number of IO threads (`fio_numjobs`) and the file size (`fio_size`) can be adjusted.
-
-#### Single device performance
-Use fio to test a single device with multiple jobs. This is useful for testing Ceph OSD host db/wal disks.
-
-#### Single host, multiple device performance
-Use fio to test all devices on a host. This is useful for testing the aggregate performance of all OSD disks on OSD hosts. 
-
-#### Aggregate Performance
-Filesystem clients are added to the benchmark in turn from one filesystem client, to all filesystem clients. Each clients' contribution to filesystem bandwidth and IOPs is measured and plotted. The benchmark comprises a two-dimensional parameter sweep across multiple IO block-sizes and IO modes.
-
-Useful for measuring saturation of filesystem performance. 
-
-#### Mixed IO
-All filesystem clients participate in a range of benchmarks. A three-dimensional parameter sweep from 100% read to 100% write, from 100% random to 100% sequential IOs, and across multiple IO block-sizes is used to assemble the benchmark.

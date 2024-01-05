@@ -1,0 +1,7 @@
+---
+
+fio_perfkit_single_host_config: "{{ undef('Set a list of device paths') }}"
+
+fio_perfkit_single_host_perf_directory: "/tmp/fio-perfkit-single-host-performance/{{ ansible_date_time.iso8601_basic_short }}"
+
+fio_perfkit_single_host_perf_output_directory: "{{ fio_perfkit_single_host_perf_directory }}/output"
