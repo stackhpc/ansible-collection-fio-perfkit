@@ -1,0 +1,37 @@
+---
+
+- name: Ensure SSH key for MPI communication
+  community.crypto.openssh_keypair:
+    path: "{{ ansible_env.HOME }}/.ssh/id_ed25519"
+    type: "ed25519"
+  register: mpi_ssh
+  when: inventory_hostname == groups['io500'][0]
+
+- name: Ensure SSH authorized_keys contains MPI public key
+  ansible.posix.authorized_key:
+    user: "{{ ansible_user }}"
+    key: "{{ hostvars[groups['io500'][0]]['mpi_ssh']['public_key'] }}"
+  become: true
+
+- name: Disable SSH StrictHostKeyChecking
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}/.ssh/config"
+    mode: "0400"
+    content: |
+      Host *
+        StrictHostKeyChecking no
+
+- name: Write io500 configuration file
+  ansible.builtin.template:
+    src: "{{ io500_config_template_path }}"
+    dest: "{{ io500_test_path }}/io500-config.ini"
+    mode: "0644"
+
+- name: Write io500 mpiexec hosts file
+  ansible.builtin.copy:
+    dest: "{{ io500_test_path }}/hosts"
+    content: |
+      {% for host in groups['io500'] %}
+      {{ hostvars[host]['ansible_default_ipv4']['address'] }}
+      {% endfor %}
+    mode: "0644"

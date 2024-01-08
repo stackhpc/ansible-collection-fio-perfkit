@@ -1,0 +1,7 @@
+- name: Ensure system dependencies (RedHat)
+  ansible.builtin.include_tasks: install/RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure system dependencies (Debian)
+  ansible.builtin.include_tasks: install/Debian.yml
+  when: ansible_os_family == 'Debian'
