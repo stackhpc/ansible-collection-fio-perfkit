@@ -1,0 +1,12 @@
+---
+
+- name: Ensure system dependencies are installed
+  ansible.builtin.package:
+    name:
+      - "openmpi-bin"
+      - "apptainer"
+  become: true
+
+- name: Set mpiexec path fact
+  ansible.builtin.set_fact:
+    mpiexec_path: "/usr/bin/mpiexec"
