@@ -108,7 +108,16 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
             - read
             - write
 
-
+- name: Run io500 tests
+  hosts: io500
+  gather_facts: true
+  tasks:
+    - name: Run the io500 tests
+      ansible.builtin.import_role:
+        name: stackhpc.fio_perfkit.io500
+      vars:
+        io500_test_path: "/mnt/share"
+        io500_stonewall_time: 300
 ```
 
 ### Benchmarks
@@ -126,4 +135,9 @@ Filesystem clients are added to the benchmark in turn from one filesystem client
 Useful for measuring saturation of filesystem performance. 
 
 #### Mixed IO
-All filesystem clients participate in a range of benchmarks. A three-dimensional parameter sweep from 100% read to 100% write, from 100% random to 100% sequential IOs, and across multiple IO block-sizes is used to assemble the benchmark.
+All filesystem clients participate in a range of benchmarks. A three-dimensional parameter sweep from 100% read to 100%
+write, from 100% random to 100% sequential IOs, and across multiple IO block-sizes is used to assemble the benchmark.
+
+#### io500
+Run the io500 using OpenMPI and [io500-singularity](https://github.com/stackhpc/io500-singularity). All members of the
+`[io500]` group will participate in the benchmark, and the first host will act as the MPI coordinator. 
