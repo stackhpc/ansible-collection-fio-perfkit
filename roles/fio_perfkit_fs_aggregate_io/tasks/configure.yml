@@ -1,5 +1,14 @@
 ---
 
+- name: Ensure output directory is removed
+  ansible.builtin.file:
+    state: absent
+    path: "{{ item }}"
+  when: inventory_hostname in groups['control']
+  loop:
+    - "{{ fio_perfkit_fs_aggregate_io_jobfile_directory }}"
+    - "{{ fio_perfkit_fs_aggregate_io_output_directory }}"
+
 - name: Ensure output directory exists
   ansible.builtin.file:
     state: directory

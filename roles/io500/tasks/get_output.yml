@@ -1,0 +1,39 @@
+---
+
+- name: Find output files
+  ansible.builtin.find:
+    paths: "{{ io500_resultdir }}"
+    recurse: true
+    file_type: file
+  when: inventory_hostname == groups['io500'][0]
+  register: output_files
+
+- name: Set local output directory fact
+  ansible.builtin.set_fact:
+    local_output_directory: >-
+      {{
+        io500_local_output_directory +
+        "/" +
+        io500_local_output_directory_prefix +
+        "." +
+        ansible_date_time.iso8601_basic_short
+      }}
+  delegate_to: localhost
+  delegate_facts: true
+  run_once: true
+
+- name: Make output directory
+  ansible.builtin.file:
+    state: directory
+    recurse: true
+    path: "{{ hostvars['localhost']['local_output_directory'] }}"
+  delegate_to: localhost
+  run_once: true
+
+- name: Fetch output files
+  ansible.builtin.fetch:
+    src: "{{ item }}"
+    dest: "{{ hostvars['localhost']['local_output_directory'] }}/"
+    flat: true
+  when: inventory_hostname == groups['io500'][0]
+  loop: "{{ output_files.files | map(attribute='path') }}"

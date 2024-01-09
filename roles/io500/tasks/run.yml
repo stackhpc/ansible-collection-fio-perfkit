@@ -1,11 +1,11 @@
 ---
 
-- name: Drop filesystem caches
-  ansible.builtin.command:
-    cmd: >-
-      {{ io500_drop_caches_cmd }}
+- name: Drop filesystem caches # noqa command-instead-of-shell
+  ansible.builtin.shell:
+    cmd: "{{ io500_drop_caches_cmd }}"
   become: true
   changed_when: true
+  when: io500_drop_caches
 
 - name: Run io500 test
   ansible.builtin.command:
@@ -21,3 +21,5 @@
       {{ io500_test_path }}/io500-config.ini
   changed_when: true
   when: inventory_hostname == groups['io500'][0]
+  async: "{{ io500_command_async_runtime }}"
+  poll: 60

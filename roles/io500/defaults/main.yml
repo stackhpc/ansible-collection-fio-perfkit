@@ -16,7 +16,7 @@ io500_datadir: "{{ io500_test_path }}/datadir"
 
 io500_resultdir: "{{ io500_test_path }}/resultdir"
 
-io500_mpiexec_args: "--display-map --map-by core --mca btl self,tcp --mca pml ob1 --mca osc ^ucx"
+io500_mpiexec_args: "--display-map --map-by node --mca btl self,tcp --mca pml ob1 --mca osc ^ucx"
 
 io500_mpiexec_np: "{{ groups['io500'] | map('extract', hostvars, ['ansible_processor_nproc']) | sum }}"
 
@@ -26,9 +26,15 @@ io500_timestamp_datadir: "FALSE"
 
 io500_timestamp_resultdir: "FALSE"
 
-io500_drop_caches: "FALSE"
+io500_drop_caches: false
 
 io500_drop_caches_cmd: >-
   "echo 3 > /proc/sys/vm/drop_caches"
 
 io500_verbosity: 1
+
+io500_local_output_directory: "{{ playbook_dir }}"
+
+io500_local_output_directory_prefix: "io500"
+
+io500_command_async_runtime: "{{ 150 * 60 }}"

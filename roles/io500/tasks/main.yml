@@ -8,3 +8,6 @@
 
 - name: Run
   ansible.builtin.include_tasks: run.yml
+
+- name: Get output
+  ansible.builtin.include_tasks: get_output.yml

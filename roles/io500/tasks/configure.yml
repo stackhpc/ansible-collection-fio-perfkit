@@ -35,3 +35,12 @@
       {{ hostvars[host]['ansible_default_ipv4']['address'] }}
       {% endfor %}
     mode: "0644"
+
+- name: Ensure output directory is removed
+  ansible.builtin.file:
+    state: absent
+    path: "{{ item }}"
+  when: inventory_hostname == groups['io500'][0]
+  loop:
+    - "{{ io500_resultdir }}"
+    - "{{ io500_datadir }}"
