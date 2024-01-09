@@ -1,5 +1,13 @@
 ---
 
+- name: Ensure output directory is removed
+  ansible.builtin.file:
+    state: absent
+    path: "{{ item }}"
+  loop:
+    - "{{ fio_perfkit_single_device_perf_directory }}"
+    - "{{ fio_perfkit_single_device_perf_output_directory }}"
+
 - name: Ensure output directory exists
   ansible.builtin.file:
     state: directory
