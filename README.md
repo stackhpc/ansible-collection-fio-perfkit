@@ -19,13 +19,19 @@ Create a simple Ansible inventory, specifying a single `control` host, and as ma
 
 The control `host` may be `localhost`, but the control host must be able to connect to port 8765 on all `fs_client` hosts. 
 
-Equally, the control host may be one of the filesystem clients, but output plots will be generated on the control host and must be retrieved.  
+Equally, the control host may be one of the filesystem clients, but output plots will be generated on the control host and must be retrieved.
+
+For io500 tests, a single `io500` group of hosts participating in the io500 test should be created. The first host
+listed in the group wil coordinate the io500 MPI jobs.
 
 ```
 [control]
 localhost ansible_connection=local # Must be able to connect to port 8765 on all clients
 
 [fs_clients]
+fs-client[01-30]
+
+[io500]
 fs-client[01-30]
 ```
 
