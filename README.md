@@ -162,4 +162,4 @@ write, from 100% random to 100% sequential IOs, and across multiple IO block-siz
 
 #### io500
 Run the io500 using OpenMPI and [io500-singularity](https://github.com/stackhpc/io500-singularity). All members of the
-`[io500]` group will participate in the benchmark, and the first host will act as the MPI coordinator. 
+`[io500]` group will participate in the benchmark, and the first host will act as the MPI coordinator.
