@@ -46,6 +46,8 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
     - name: Test conncurrent IO to all devices on a host
       ansible.builtin.import_role:
         name: stackhpc.fio_perfkit.fio_perfkit_single_host
+      tags:
+        - single-host
       vars:
         fio_perfkit_single_host_config:
           - devices:
@@ -60,6 +62,8 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
     - name: Test conncurrent IO from multiple processes to a single device on a host
       ansible.builtin.import_role:
         name: stackhpc.fio_perfkit.fio_perfkit_single_device
+      tags:
+        - single-device
       vars:
         fio_perfkit_single_device_config:
           - device: /dev/vdb
@@ -76,6 +80,8 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
     - name: Test a mix of read/write IO to a shared filesystem from many clients
       ansible.builtin.import_role:
         name: stackhpc.fio_perfkit.fio_perfkit_fs_mixed_io
+      tags:
+        - fs-mixed-io
       vars:
         fio_perfkit_fs_mixed_io_config:
         # Test the product of fio_bs_list, fio_read_mix and fio_random_mix
@@ -99,6 +105,8 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
     - name: Test the aggregate performance of a shared filesystem from many clients
       ansible.builtin.import_role:
         name: stackhpc.fio_perfkit.fio_perfkit_fs_aggregate_io
+      tags:
+        - fs-aggregate-io
       vars:
         fio_perfkit_fs_aggregate_io_config:
           # Test the product of fio_bs_list and fio_rw_list
@@ -121,6 +129,8 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
     - name: Run the io500 tests
       ansible.builtin.import_role:
         name: stackhpc.fio_perfkit.io500
+      tags:
+        - io500
       vars:
         io500_test_path: "/mnt/share"
         io500_stonewall_time: 300
