@@ -9,7 +9,7 @@
 
 - name: Ensure SSH authorized_keys contains MPI public key
   ansible.posix.authorized_key:
-    user: "{{ ansible_user }}"
+    user: "{{ ansible_env.USER }}"
     key: "{{ hostvars[groups['io500'][0]]['mpi_ssh']['public_key'] }}"
   become: true
 
