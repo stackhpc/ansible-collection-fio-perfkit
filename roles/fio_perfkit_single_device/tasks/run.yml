@@ -13,5 +13,5 @@
       {{ item.max_numjobs }}
   loop: "{{ fio_perfkit_single_device_config }}"
   changed_when: true
-  when: inventory_hostname in groups['fs_clients']
+  when: inventory_hostname in groups['device_clients']
   become: true

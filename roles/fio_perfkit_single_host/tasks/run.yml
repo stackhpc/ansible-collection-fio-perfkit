@@ -12,5 +12,5 @@
       {{ item.devices | join(" ") }}
   loop: "{{ fio_perfkit_single_host_config }}"
   changed_when: true
-  when: inventory_hostname in groups['fs_clients']
+  when: inventory_hostname in groups['device_clients']
   become: true

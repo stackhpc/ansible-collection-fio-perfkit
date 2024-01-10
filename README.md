@@ -31,6 +31,9 @@ localhost ansible_connection=local # Must be able to connect to port 8765 on all
 [fs_clients]
 fs-client[01-30]
 
+[device_clients]
+osd[01-30]
+
 [io500]
 fs-client[01-30]
 ```
@@ -40,7 +43,7 @@ An example Ansible playbook to use with `ansible-collection-fio-perfkit`:
 ```yaml
 ---
 - name: Run device tests
-  hosts: fs_clients
+  hosts: device_clients
   gather_facts: true
   tasks:
     - name: Test conncurrent IO to all devices on a host
