@@ -142,8 +142,14 @@ All benchmarks are time-based - they run for as long as specified in `fio_runtim
 #### Single device performance
 Use fio to test a single device with multiple jobs. This is useful for testing Ceph OSD host db/wal disks.
 
+> [!WARNING]  
+> This test may break any existing filesystems on the target devices!
+
 #### Single host, multiple device performance
 Use fio to test all devices on a host. This is useful for testing the aggregate performance of all OSD disks on OSD hosts. 
+
+> [!WARNING]  
+> This test may break any existing filesystems on the target devices!
 
 #### Aggregate Performance
 Filesystem clients are added to the benchmark in turn from one filesystem client, to all filesystem clients. Each clients' contribution to filesystem bandwidth and IOPs is measured and plotted. The benchmark comprises a two-dimensional parameter sweep across multiple IO block-sizes and IO modes.
